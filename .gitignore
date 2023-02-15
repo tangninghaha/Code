@@ -1,0 +1,7 @@
+*.exe
+*.out
+*.in
+*.txt
+*.ans
+*.*~
+*.swp
