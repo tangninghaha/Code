@@ -17,6 +17,8 @@ long long num[N + 1];
 /* Definition */
 int main()
 {
+  freopen("energy.in", "r", stdin);
+  freopen("energy.out", "w", stdout); 
   int n, k;
   scanf("%d%d", &n, &k);
   long long sum = 0;
@@ -49,16 +51,25 @@ int main()
 }
 long long Sovle(const int n, long long pur)
 {
-  int left = n - 1;
+  int left = n - 2;
+  left = Mod(left, n); 
   int right = 2;
-  int len = 1;
+  int len = 2;
   long long ret = 0;
   long long tmp = 0;
   for (int i = 1; i <= n; ++i)
   {
-    ++left;
+    left += 2;
     left = Mod(left, n);
     --len;
+    if (len == 0)
+    {
+      --left;
+      ++right;
+      left = Mod(left, n);
+      right = Mod(right, n);
+      ++len; 
+    } 
     if (num[i] >= pur)
       continue;
     else
@@ -67,7 +78,7 @@ long long Sovle(const int n, long long pur)
       {
         if (num[left] > pur)
         {
-          tmp = Min(a[left] - pur, pur - num[i]);
+          tmp = Min(num[left] - pur, pur - num[i]);
           num[i] += tmp;
           num[left] -= tmp;
           ret += tmp * len;
@@ -81,7 +92,7 @@ long long Sovle(const int n, long long pur)
         }
         else
         {
-          ++left;
+          --left;
           ++right;
           left = Mod(left, n);
           right = Mod(right, n);
@@ -94,7 +105,7 @@ long long Sovle(const int n, long long pur)
 }
 int Mod(int x, const int n)
 {
-  return (x - 1) % n + 1;
+  return ((x - 1) % n + n) % n + 1;
 }
 long long Min(long long _a, long long _b)
 {

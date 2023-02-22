@@ -13,18 +13,9 @@ void AddRemote();
 void Commit(string);
 
 /* Definition */
-void Init()
-{
-  system("git init");
-}
 void Pull()
 {
   system("git pull origin");
-  return;
-}
-void AddRemote()
-{
-  system("git remote add origin git@github.com:tangninghaha/Code.git");
   return;
 }
 void Push()
@@ -42,25 +33,25 @@ int main()
 {
   while (true)
   {
+  	system("cls");
+  	printf("[1]Pull\n[2]Push\n[3]Commit\n");
     int x;
     scanf("%d", &x);
     if (x == 1)
-      Init();
+      Pull();
     else if (x == 2)
-      AddRemote();
+      Push();
     else if (x == 3)
     {
       string mes;
+      printf("Message: "); 
       std::cin >> mes;
       Commit(mes);
-    }
-    else if (x == 4)
-    {
-      Push();
     }
     else if (!x)
     {
       return 0;
     }
+    system("pause");
   }
 }
