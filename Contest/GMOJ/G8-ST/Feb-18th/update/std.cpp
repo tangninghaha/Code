@@ -83,7 +83,7 @@ int main()
   {
     if (type[i] == 'D')
     {
-      G.pd[x[i] * 2 - 1]
+      G.pd[x[i] * 2 - 1];
       Dfs(G.to[x[i] * 2 - 1], i);
     }
   }
