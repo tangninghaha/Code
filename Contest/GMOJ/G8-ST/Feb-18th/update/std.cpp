@@ -26,30 +26,27 @@ class Graph
 
 /* Declaration */
 int main();
-int GetFa(int);
 void Dfs(int, int);
 
 /* Variable */
-bool vis[N + 1];
+bool pd[N + 1];
+bool sta[N + 1];
 Graph G;
-int fa[N + 1];
 char type[Q + 1];
 int x[Q + 1];
 int y[Q + 1];
 int ans[N + 1];
-bool pd[N + 1];
-int st;
 
 /* Definition */
 int main()
 {
+  freopen("farm.in", "r", stdin);
+//  freopen("farm.out", "w", stdout);
   int n, q;
   scanf("%d%d", &n, &q);
-  for (int i = 1; i <= n; ++i)
-  {
-    fa[i] = i;
-  }
   char tmp = getchar();
+  for (int i = 1; i <= n; ++i)
+  	pd[i] = true;
   for (int i = 1; i <= q; ++i)
   {
     while (tmp != 'D' && tmp != 'A' && tmp != 'R')
@@ -60,7 +57,7 @@ int main()
     if (type[i] == 'D')
     {
       scanf("%d", &x[i]);
-      pd[x[i]] = true;
+      pd[x[i]] = false;
     }
     else if (type[i] == 'A')
     {
@@ -71,30 +68,43 @@ int main()
     else
     {
       scanf("%d", &x[i]);
-      G.pd[x[i] * 2 - 1] = false;
-      G.pd[x[i] * 2] = false;
+      G.pd[x[i] * 2 - 1] = G.pd[x[i] * 2] = false;
     }
     tmp = getchar();
   }
   for (int i = 1; i <= n; ++i)
-    if (pd[i] && !vis[i])
-      st = i, Dfs(i, q);
+    if (pd[i])
+      Dfs(i, q);
   for (int i = q; i >= 1; --i)
   {
     if (type[i] == 'D')
     {
-      G.pd[x[i] * 2 - 1];
-      Dfs(G.to[x[i] * 2 - 1], i);
+      if (sta[x[i]])
+        continue;
+      Dfs(x[i], i - 1);
+    }
+    else
+    {
+      if (type[i] == 'R')
+      {
+        G.pd[x[i] * 2 - 1] = G.pd[x[i] * 2] = true;
+        if (sta[G.to[x[i] * 2 - 1]] && sta[G.to[x[i] * 2]])
+          continue;
+        if (!sta[G.to[x[i] * 2 - 1]] && !sta[G.to[x[i] * 2]])
+          continue;
+        Dfs(G.to[x[i] * 2 - 1], i - 1);
+        Dfs(G.to[x[i] * 2], i - 1);
+      }
     }
   }
+  for (int i = 1; i <= n; ++i)
+    printf("%d\n", ans[i]);
 }
 void Dfs(int _x, int _ans)
 {
-  if (vis[_x])
+  if (sta[_x])
    return;
-  int tmp = GetFa(_x);
-  fa[tmp] = st;
-  vis[_x] = true;
+  sta[_x] = true;
   if (!ans[_x])
     ans[_x] = _ans;
   for (int i = G.head[_x]; i; i = G.nxt[i])
