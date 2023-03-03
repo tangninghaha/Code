@@ -35,20 +35,20 @@ int main()
     scanf("%lld%lld", &x[i], &y[i]);
   }
   long long ans = 0;
-  if (t & 1)
+  int last = 1;
+  x[n + 1] = x[n] + 1 + k;
+  for (int i = 2; i <= n + 1; ++i)
   {
-    int last = 1;
-    x[n + 1] = x[n] + 1 + k;
-    for (int i = 2; i <= n + 1; ++i)
+    if (x[i] - x[i - 1] > k)
     {
-      if (x[i] - x[i - 1] > k)
-      {
+      if (n & 1)
         ans += Sovle(x + last - 1, y + last - 1, i - last);
-        last = i;
-      }
+      else
+        ans += Sovle(x + last - 1, y + last - 1, ub + last - 1, i - last);
+      last = i;
     }
-    printf("%lld", ans);
   }
+  printf("%lld", ans);
   return 0;
 }
 long long Sovle(long long* _x, long long* _y, int len)
@@ -59,9 +59,26 @@ long long Sovle(long long* _x, long long* _y, int len)
   for (int i = 1; i <= len; ++i)
   {
     if (i & 1)
-      ret = Min(ret, y[i]);
-    else if (x[i + 1] - x[i - 1] <= k)
-      ret = Min(ret, y[i]);
+      ret = Min(ret, _y[i]);
+    else if (_x[i + 1] - _x[i - 1] <= k)
+      ret = Min(ret, _y[i]);
   }
   return ret;
+}
+long long Sovle2(long long* _x, long long* _y, int* _ub, int len)
+{
+  int last = 1;
+  for (int i = 1; i <= len; ++i)
+  {
+    while (_x[last] - _x[i] <= k && last <= len)
+      ++last;
+    _ub[i] = last;
+  }
+  for (int i = 1; i <= len; ++i)
+  {
+    for (int j = 1; j <= len; ++j)
+    {
+      f[i][j] = 
+    }
+  }
 }
