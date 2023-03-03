@@ -2,20 +2,22 @@
 
 /* Constant */
 const int N = 1e5;
-const int INF = 1 << 29;
+const long long INF = (long long)1 << 50;
 
 /* Declaration */
 int main();
 long long Max(long long, long long);
 int Min(int, int);
+long long Sovle(long long*, long long*, int);
 
 /* Variable */
-int x[N + 2], y[N + 1];
+long long x[N + 2], y[N + 1];
 int ub[N + 1];
 long long f[N + 2];
+int t, n, k;
 
 /* Definition */
-int Min(int _a, int _b)
+long long Min(long long _a, long long _b)
 {
   return _a < _b ? _a : _b;
 }
@@ -26,66 +28,40 @@ long long Max(long long _a, long long _b)
 int main()
 {
   freopen("pairedup.in", "r", stdin);
-  freopen("pairedup.out", "w", stdout);
-  int t, n, k;
+//  freopen("pairedup.out", "w", stdout);
   scanf("%d%d%d", &t, &n, &k);
   for (int i = 1; i <= n; ++i)
   {
-    scanf("%d%d", &x[i], &y[i]);
+    scanf("%lld%lld", &x[i], &y[i]);
   }
   long long ans = 0;
   if (t & 1)
   {
-    if (n & 1)
+    int last = 1;
+    x[n + 1] = x[n] + 1 + k;
+    for (int i = 2; i <= n + 1; ++i)
     {
-      bool pd = false;
-      int minn = INF;
-      for (int i = 1; i <= n + 1; ++i)
+      if (x[i] - x[i - 1] > k)
       {
-        if (x[i] - x[i - 1] > k)
-        {
-          ans += minn;
-          minn = INF;
-          pd = false;
-        }
-        if (i == n + 1)
-          break;
-        pd = !pd;
-        if (pd)
-          minn = Min(minn, y[i]);
-        else if (x[i + 1] - x[i - 1] <= k)
-          minn = Min(minn, y[i]);
+        ans += Sovle(x + last - 1, y + last - 1, i - last);
+        last = i;
       }
-      printf("%lld", ans);
     }
-    else
-    {
-      printf("0");
-    }
-  }
-  else
-  {
-    int j = n + 1;
-    for (int i = n; i >= 1; --i)
-    {
-      while (x[j - 1] - x[i] > k)
-        --j;
-      ub[i] = j;
-    }
-    bool pd = false;
-    for (int i = n; i >= 1; --i)
-    {
-      if (x[i] - x[i + 1] > k)
-      {
-        pd = false;
-      }
-      pd = !pd;
-      if (pd)
-          f[i] = Max(f[i + 1], f[ub[i]] + y[i]);
-      else
-        f[i] = f[i + 1];
-    }
-    printf("%lld", f[1]);
+    printf("%lld", ans);
   }
   return 0;
+}
+long long Sovle(long long* _x, long long* _y, int len)
+{
+  if (!(len & 1))
+    return 0;
+  long long ret = INF;
+  for (int i = 1; i <= len; ++i)
+  {
+    if (i & 1)
+      ret = Min(ret, y[i]);
+    else if (x[i + 1] - x[i - 1] <= k)
+      ret = Min(ret, y[i]);
+  }
+  return ret;
 }
